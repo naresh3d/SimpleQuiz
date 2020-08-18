@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import {StyleSheet, View, Text, TextInput, Alert, Button} from 'react-native';
 
 export default class AppLogin extends Component {
@@ -24,7 +23,7 @@ export default class AppLogin extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>Quiz App</Text>
+        <Text style={styles.text}>My Quiz App</Text>
         <TextInput
           value={this.state.username}
           onChangeText={username => this.setState({username})}

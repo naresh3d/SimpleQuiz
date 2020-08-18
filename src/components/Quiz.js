@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, TextInput, Alert, Button} from 'react-native';
+import {StyleSheet, View, Text, Button} from 'react-native';
 import Question from './Question';
-import unescape from 'lodash/unescape';
+import QuizResult from './QuizResult';
+import QuestionItem from './QuestionItem';
 
 export default class Quiz extends Component {
   constructor(props) {
@@ -38,23 +39,19 @@ export default class Quiz extends Component {
         quizState: 1,
         questionId: 0,
       });
-      console.log('-----------parsed---------');
-      console.log(this.state.quizData);
     }
   };
 
   setQuestionResult = result => {
     this.state.quizData[this.state.questionId].correct = result;
-    console.log('-----------result---------');
-    console.log(this.state.quizData);
   };
 
   continueQuiz = () => {
-    console.log('-----------continue---------');
-    console.log(this.state.quizData);
-    /*if (this.state.questionId < this.state.quizData.length - 1) {
-      this.setState({questionId: this.state.question + 1});
-    }*/
+    if (this.state.questionId < this.state.quizData.length - 1) {
+      this.setState({questionId: this.state.questionId + 1});
+    } else {
+      this.setState({quizState: 2});
+    }
   };
 
   render() {
@@ -70,9 +67,16 @@ export default class Quiz extends Component {
         <View style={styles.container}>
           <Question
             questionItem={this.state.quizData[this.state.questionId]}
-            continueAction={this.continueQuiz}
             setResultAction={this.setQuestionResult}
+            continueAction={this.continueQuiz}
           />
+        </View>
+      );
+    } else if (this.state.quizState === 2) {
+      return (
+        <View style={styles.container}>
+          <QuizResult quizData={this.state.quizData} />
+          <Button title="Play Again" onPress={this.startQuiz} />
         </View>
       );
     }
@@ -97,22 +101,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-
-class QuestionItem {
-  category: string;
-  question: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-  correct: Boolean;
-
-  constructor(element) {
-    this.category = unescape(element.category);
-    this.question = unescape(element.question);
-    this.correct_answer = unescape(element.correct_answer);
-    this.incorrect_answers = [];
-    element.incorrect_answers.forEach(e => {
-      this.incorrect_answers.push(unescape(e));
-    });
-    this.correct = false;
-  }
-}

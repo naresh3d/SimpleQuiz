@@ -1,37 +1,13 @@
 import React, {Component} from 'react';
 
-import {
-  StyleSheet,
-  View,
-  Text,
-  TextInput,
-  Alert,
-  Button,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, Text, Button, TouchableOpacity} from 'react-native';
 
 export default class Question extends Component {
   constructor(props) {
     super(props);
-    console.log('=========Props===========');
-    console.log(props);
-
     this.state = {
-      mergedQuestions: null,
       indicator: '',
     };
-
-    let incorrectCount = this.props.questionItem.incorrect_answers.length;
-    let randomIndex = Math.floor(Math.random() * (incorrectCount + 1));
-    let mergedQuestions = this.props.questionItem.incorrect_answers.slice();
-    mergedQuestions.splice(
-      randomIndex,
-      0,
-      this.props.questionItem.correct_answer,
-    );
-    console.log('--------------------------------');
-    console.log(mergedQuestions);
-    this.state.mergedQuestions = mergedQuestions;
 
     this.selectOption = this.selectOption.bind(this);
   }
@@ -40,7 +16,7 @@ export default class Question extends Component {
     console.log(param.index);
     if (this.state.indicator === '') {
       if (
-        this.state.mergedQuestions[param.index] ===
+        this.props.questionItem.all_answers[param.index] ===
         this.props.questionItem.correct_answer
       ) {
         this.state.correct = true;
@@ -53,9 +29,14 @@ export default class Question extends Component {
     }
   };
 
+  handleContinueClick = () => {
+    this.setState({indicator: ''});
+    this.props.continueAction();
+  };
+
   render() {
     let optionButtons = [];
-    this.state.mergedQuestions.forEach((element, index) => {
+    this.props.questionItem.all_answers.forEach((element, index) => {
       optionButtons.push(
         <>
           <TouchableOpacity
@@ -74,7 +55,7 @@ export default class Question extends Component {
         {optionButtons}
         <Text style={styles.text}>{this.state.indicator}</Text>
         {this.state.indicator !== '' && (
-          <Button title="Continue" onPress={this.props.continueAction} />
+          <Button title="Continue" onPress={this.handleContinueClick} />
         )}
       </View>
     );
