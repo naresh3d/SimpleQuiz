@@ -1,33 +1,31 @@
-import React, {Component} from 'react';
-
+import React from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 
-export default class QuizResult extends Component {
-  render() {
-    let answers = [];
-    let correctCount = 0;
-    this.props.quizData.forEach((element, i) => {
-      answers.push(
-        <Text key={i} style={styles.answer}>
-          Question # {i + 1} : {element.question} ==={' '}
-          {element.correct ? 'CORRECT' : 'WRONG'}
-        </Text>,
-      );
-      if (element.correct) {
-        correctCount++;
-      }
-    });
-    return (
-      <View style={styles.container}>
-        <ScrollView>
-          {answers}
-          <Text style={styles.text}>
-            SCORE : {correctCount} / {this.props.quizData.length}
-          </Text>
-        </ScrollView>
-      </View>
+export default function QuizResult(props) {
+  let answers = [];
+  let correctCount = 0;
+  props.quizData.forEach((element, i) => {
+    answers.push(
+      <Text key={i} style={styles.answer}>
+        Question # {i + 1} : {element.question} ==={' '}
+        {element.correct ? 'CORRECT' : 'WRONG'}
+      </Text>,
     );
-  }
+    if (element.correct) {
+      correctCount++;
+    }
+  });
+
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        {answers}
+        <Text style={styles.text}>
+          SCORE : {correctCount} / {props.quizData.length}
+        </Text>
+      </ScrollView>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
