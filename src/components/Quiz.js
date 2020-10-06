@@ -12,10 +12,12 @@ export default class Quiz extends Component {
       quizState: 0, // 0 = Not Started, 1 = in progress, 2 = complete
       questionId: -1,
       quizData: [],
+      startQuizClicked: false,
     };
   }
 
   startQuiz = () => {
+    this.setState({startQuizClicked: true});
     fetch('https://opentdb.com/api.php?amount=10&difficulty=hard', {
       method: 'GET',
     })
@@ -50,7 +52,7 @@ export default class Quiz extends Component {
     if (this.state.questionId < this.state.quizData.length - 1) {
       this.setState({questionId: this.state.questionId + 1});
     } else {
-      this.setState({quizState: 2});
+      this.setState({quizState: 2, startQuizClicked: false});
     }
   };
 
@@ -59,7 +61,11 @@ export default class Quiz extends Component {
       return (
         <View style={styles.container}>
           <Text style={styles.text}>Welcome to My Quiz App</Text>
-          <Button title="Start Quiz" onPress={this.startQuiz} />
+          <Button
+            title="Start Quiz"
+            onPress={this.startQuiz}
+            disabled={this.state.startQuizClicked}
+          />
         </View>
       );
     } else if (this.state.quizState === 1) {
@@ -76,7 +82,11 @@ export default class Quiz extends Component {
       return (
         <View style={styles.container}>
           <QuizResult quizData={this.state.quizData} />
-          <Button title="Play Again" onPress={this.startQuiz} />
+          <Button
+            title="Play Again"
+            onPress={this.startQuiz}
+            disabled={this.state.startQuizClicked}
+          />
         </View>
       );
     }
