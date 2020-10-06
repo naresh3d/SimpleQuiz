@@ -6,8 +6,8 @@ export default class AppLogin extends Component {
     super(props);
 
     this.state = {
-      username: 'adminUser',
-      password: '12345678',
+      username: '',
+      password: '',
     };
   }
 

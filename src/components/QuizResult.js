@@ -3,10 +3,6 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 
 export default class QuizResult extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let answers = [];
     let correctCount = 0;
