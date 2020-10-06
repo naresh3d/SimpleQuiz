@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button} from 'react-native';
 import AppLogin from './src/components/AppLogin';
 import Quiz from './src/components/Quiz';
+import {AsyncStorage} from 'react-native';
 
 export default class App extends Component {
   constructor(props) {
@@ -13,12 +14,17 @@ export default class App extends Component {
   }
 
   doLogin = () => {
-    this.setState({loggedIn: true});
+    this.setLoggedInSttatus(true);
   };
 
   doLogout = () => {
-    this.setState({loggedIn: false});
+    this.setLoggedInSttatus(false);
   };
+
+  setLoggedInSttatus(loggedInStatus) {
+    this.setState({loggedIn: loggedInStatus});
+    this.storeUserState(JSON.stringify(loggedInStatus));
+  }
 
   render() {
     if (!this.state.loggedIn) {
@@ -30,6 +36,29 @@ export default class App extends Component {
           <Quiz />
         </>
       );
+    }
+  }
+
+  componentDidMount() {
+    this.loadUserState();
+  }
+
+  async storeUserState(loggedIn) {
+    try {
+      await AsyncStorage.setItem('loggedIn', loggedIn);
+    } catch (error) {
+      console.log('Something went wrong', error);
+    }
+  }
+
+  async loadUserState() {
+    try {
+      let loggedInState = await AsyncStorage.getItem('loggedIn');
+      let loggedIn = JSON.parse(loggedInState);
+      this.setState({loggedIn: loggedIn});
+      console.log(loggedIn);
+    } catch (error) {
+      console.log('Something went wrong', error);
     }
   }
 }
